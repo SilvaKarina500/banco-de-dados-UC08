@@ -98,3 +98,67 @@ select * from clientes where data_nascimento LIKE "%2000%";
 select * from colaboradores where ativo IS not NULL;
 --AS - Nome temporário
 select produto AS FRUTA  from produtos;
+
+
+--25/06/2026
+USE loja_online;
+SELECT  nome from colaboradores
+union
+-- organição das colunas (AS) cria as colunas o (union) seria para unir as tabelas (lembrando só vai puxar oque estiver na tava que esta chamando)
+--O union - combina conjuntos de resultados de duas ou mais declarações em uma unica tabela (query)
+--Para acrescentar as xolunas as duas tabelas precisam estarem com a mesma quantidade(colunas)
+select produto from produtos;
+SELECT "colaboradores" AS contexto, id, nome AS valor from colaboradores
+union
+select "produto" AS contexto, id, produto AS valor from produtos;
+
+-- une tudo e duplica (union all)
+SELECT nome from colaboradores
+union all
+select nome from colaboradores;
+
+--Selecionar os primeiros 50 clientes e, se forem do sexo f, vêm identificado
+--como feminino, e se for m, vÊm como masculino:
+select
+nome,
+case(sexo)
+when 'f' then 'feminino'
+when 'm' then 'masculino'
+end sexo
+ from clientes limit 50;
+
+--O case pode ser usado também para trazer dados e fazer uma comparação ao mesmo
+--tempo, neste caso não preciso do parâmetro de comparação.
+ select
+nome, email,
+case
+when email LIKE "%@gmail.com" then 'GMAIL'
+when email LIKE "%@hotmail.com" then 'HOTMAIL'
+ELSE "..."
+end DOMINIO 
+ from clientes limit 50;
+
+--Quero o nome dos colaboradores e saber quem está ativo ou
+--inativo.
+select
+nome, 
+case
+when ativo LIKE "1" then 'ativo'
+when ativo LIKE "0" then 'inativo'
+end STATUS
+from colaboradores;
+-- para trazer uma tabela e trazer o
+select
+clientes.nome cliente,
+colaboradores.nome colaboradores,
+encomendas.data_hora
+from encomendas
+left join clientes
+on encomendas.id_cliente = clientes.id
+left join colaboradores
+on encomendas.id_colaborador = colaboradores.id
+where encomendas.id = 1;
+
+-- Quero obter os dados completos de uma encomenda e saber quem é o cliente,
+--colaborador, quando foi a encomenda, os produtos e as quantidades 
+-- A Maria comprou do jose no dia 10/06/2026, 40 laranjas
